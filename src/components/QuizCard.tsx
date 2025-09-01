@@ -30,7 +30,7 @@ export default function QuizCard({
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Pregunta {question.id}
         </h2>
-        <p className="text-lg text-gray-700 leading-relaxed">
+        <p className="text-lg text-gray-800 leading-relaxed font-medium">
           {question.text}
         </p>
       </div>
@@ -44,15 +44,15 @@ export default function QuizCard({
           
           if (!isAnswered) {
             buttonClass += isSelected 
-              ? "border-blue-500 bg-blue-50 text-blue-700" 
-              : "border-gray-300 hover:border-gray-400 hover:bg-gray-50";
+              ? "border-blue-500 bg-blue-50 text-blue-800 font-medium" 
+              : "border-gray-300 hover:border-gray-400 hover:bg-gray-100 text-gray-800";
           } else if (showResult) {
             if (isCorrect) {
-              buttonClass += "border-green-500 bg-green-50 text-green-700";
+              buttonClass += "border-green-500 bg-green-50 text-green-800 font-medium";
             } else if (isSelected && !isCorrect) {
-              buttonClass += "border-red-500 bg-red-50 text-red-700";
+              buttonClass += "border-red-500 bg-red-50 text-red-800 font-medium";
             } else {
-              buttonClass += "border-gray-300 bg-gray-50 text-gray-600";
+              buttonClass += "border-gray-300 bg-gray-50 text-gray-700";
             }
           }
 
@@ -63,7 +63,7 @@ export default function QuizCard({
               disabled={isAnswered}
               className={buttonClass}
             >
-              <span className="font-medium mr-3">
+              <span className="font-semibold mr-3">
                 {option.id.toUpperCase()})
               </span>
               {option.label}
@@ -74,7 +74,7 @@ export default function QuizCard({
 
       {showResult && question.explanation && (
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
+          <p className="text-sm text-blue-900 font-medium">
             <strong>Explicación:</strong> {question.explanation}
           </p>
         </div>
