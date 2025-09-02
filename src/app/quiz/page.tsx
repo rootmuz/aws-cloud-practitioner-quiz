@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { questions, QUESTION_TIME } from '@/data/questions';
 import { calculateScore } from '@/lib/scoring';
 import QuizCard from '@/components/QuizCard';
 import ProgressBar from '@/components/ProgressBar';
 import Confetti from '@/components/Confetti';
+import { Home, X } from 'lucide-react';
 
 export default function QuizPage() {
   const router = useRouter();
@@ -23,6 +24,35 @@ export default function QuizPage() {
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
+  // Función nextQuestion definida con useCallback
+  const nextQuestion = useCallback(() => {
+    if (isLastQuestion) {
+      // Guardar resultados y ir a página de resultados
+      const gameResult = calculateScore(correctAnswers);
+      localStorage.setItem('gameResult', JSON.stringify(gameResult));
+      router.push('/results');
+    } else {
+      // Siguiente pregunta
+      setCurrentQuestionIndex(prev => prev + 1);
+      setSelectedOption(null);
+      setIsAnswered(false);
+      setShowResult(false);
+      setTimeLeft(QUESTION_TIME);
+      setShowConfetti(false);
+    }
+  }, [isLastQuestion, correctAnswers, router]);
+
+  // Función handleTimeUp definida con useCallback
+  const handleTimeUp = useCallback(() => {
+    setIsAnswered(true);
+    setShowResult(true);
+    setShake(true);
+    setTimeout(() => {
+      setShake(false);
+      nextQuestion();
+    }, 1500);
+  }, [nextQuestion]);
+
   // Cargar nombre del jugador
   useEffect(() => {
     const name = localStorage.getItem('playerName');
@@ -33,7 +63,7 @@ export default function QuizPage() {
     setPlayerName(name);
   }, [router]);
 
-  // Timer effect
+  // Timer effect con dependencias correctas
   useEffect(() => {
     if (timeLeft > 0 && !isAnswered) {
       const timer = setTimeout(() => {
@@ -44,17 +74,7 @@ export default function QuizPage() {
       // Tiempo agotado - marcar como incorrecta
       handleTimeUp();
     }
-  }, [timeLeft, isAnswered]);
-
-  const handleTimeUp = () => {
-    setIsAnswered(true);
-    setShowResult(true);
-    setShake(true);
-    setTimeout(() => {
-      setShake(false);
-      nextQuestion();
-    }, 1500);
-  };
+  }, [timeLeft, isAnswered, handleTimeUp]);
 
   const handleOptionSelect = (optionId: string) => {
     if (isAnswered) return;
@@ -79,20 +99,19 @@ export default function QuizPage() {
     }, isCorrect ? 1200 : 1500);
   };
 
-  const nextQuestion = () => {
-    if (isLastQuestion) {
-      // Guardar resultados y ir a página de resultados
-      const gameResult = calculateScore(correctAnswers);
-      localStorage.setItem('gameResult', JSON.stringify(gameResult));
-      router.push('/results');
-    } else {
-      // Siguiente pregunta
-      setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedOption(null);
-      setIsAnswered(false);
-      setShowResult(false);
-      setTimeLeft(QUESTION_TIME);
-      setShowConfetti(false);
+  // Función para volver al inicio
+  const handleGoHome = () => {
+    localStorage.removeItem('playerName');
+    localStorage.removeItem('gameResult');
+    router.push('/');
+  };
+
+  // Función para finalizar quiz
+  const handleFinishQuiz = () => {
+    if (confirm('¿Estás seguro de que quieres finalizar el quiz? Se perderá tu progreso actual.')) {
+      localStorage.removeItem('playerName');
+      localStorage.removeItem('gameResult');
+      router.push('/');
     }
   };
 
@@ -117,6 +136,25 @@ export default function QuizPage() {
           <p className="text-gray-600">
             ¡Hola {playerName}! Responde las preguntas lo más rápido posible
           </p>
+        </div>
+
+        {/* Botones de navegación superiores */}
+        <div className="flex justify-between items-center max-w-2xl mx-auto mb-6">
+          <button
+            onClick={handleGoHome}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200 font-medium"
+          >
+            <Home className="w-4 h-4" />
+            Volver al inicio
+          </button>
+          
+          <button
+            onClick={handleFinishQuiz}
+            className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors duration-200 font-medium"
+          >
+            <X className="w-4 h-4" />
+            Finalizar
+          </button>
         </div>
 
         <ProgressBar

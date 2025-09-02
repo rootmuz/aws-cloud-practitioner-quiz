@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Brain, PlayCircle, Trophy } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
   const [playerName, setPlayerName] = useState('');
@@ -17,23 +18,28 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-slate-900 flex items-center justify-center p-4 transition-colors duration-300">
+      {/* Botón de toggle del tema - esquina superior derecha */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full transition-colors duration-300">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Brain className="w-8 h-8 text-blue-600" />
+            <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full transition-colors duration-300">
+              <Brain className="w-8 h-8 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
           
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">
             AWS Cloud Practitioner
           </h1>
-          <h2 className="text-xl text-blue-600 font-semibold mb-4">
+          <h2 className="text-xl text-blue-600 dark:text-blue-400 font-semibold mb-4 transition-colors duration-300">
             Quiz Challenge
           </h2>
           
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-300">
             Pon a prueba tus conocimientos de AWS con 20 preguntas sobre Cloud Practitioner. 
             ¡Tienes 20 segundos por pregunta!
           </p>
@@ -41,7 +47,7 @@ export default function Home() {
 
         <div className="space-y-6">
           <div>
-            <label htmlFor="playerName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="playerName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
               Tu nombre
             </label>
             <input
@@ -50,7 +56,7 @@ export default function Home() {
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="Ingresa tu nombre"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
               onKeyPress={(e) => e.key === 'Enter' && handleStartQuiz()}
             />
           </div>
@@ -58,7 +64,7 @@ export default function Home() {
           <button
             onClick={handleStartQuiz}
             disabled={!playerName.trim()}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-md transition-colors duration-200 flex items-center justify-center space-x-2"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-md transition-colors duration-200 flex items-center justify-center space-x-2"
           >
             <PlayCircle className="w-5 h-5" />
             <span>Comenzar Quiz</span>
@@ -66,21 +72,21 @@ export default function Home() {
         </div>
 
         <div className="mt-8 grid grid-cols-3 gap-4 text-center">
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">20</div>
-            <div className="text-xs text-gray-600">Preguntas</div>
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors duration-300">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">20</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Preguntas</div>
           </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">20s</div>
-            <div className="text-xs text-gray-600">Por pregunta</div>
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors duration-300">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">20s</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Por pregunta</div>
           </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">100</div>
-            <div className="text-xs text-gray-600">Puntos máx.</div>
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors duration-300">
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">100</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Puntos máx.</div>
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-gray-500">
+        <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
           <Trophy className="w-4 h-4" />
           <span>¡Compite por el primer lugar!</span>
         </div>
