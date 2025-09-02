@@ -11,29 +11,27 @@ interface ConfettiProps {
 export default function Confetti({ trigger, onComplete }: ConfettiProps) {
   useEffect(() => {
     if (trigger) {
-      // Configuración del confeti
-      const duration = 800;
+      // Configuración más controlada y sutil
+      const duration = 1000;
       const animationEnd = Date.now() + duration;
       
-      const randomInRange = (min: number, max: number) => {
-        return Math.random() * (max - min) + min;
-      };
-
       const runConfetti = () => {
+        // Confeti hacia el lado izquierdo (desde el centro de la pregunta)
         confetti({
-          particleCount: randomInRange(50, 100),
-          angle: randomInRange(55, 125),
-          spread: randomInRange(50, 70),
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-          colors: ['#26ccff', '#a25afd', '#ff5e7e', '#88ff5a', '#fcff42', '#ffa62d', '#ff36ff']
+          particleCount: 25,
+          angle: 160,
+          spread: 45,
+          origin: { x: 0.4, y: 0.75 }, // Más abajo, a la altura de la pregunta
+          colors: ['#26ccff', '#a25afd', '#ff5e7e', '#88ff5a', '#fcff42']
         });
         
+        // Confeti hacia el lado derecho (desde el centro de la pregunta)
         confetti({
-          particleCount: randomInRange(50, 100),
-          angle: randomInRange(55, 125),
-          spread: randomInRange(50, 70),
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-          colors: ['#26ccff', '#a25afd', '#ff5e7e', '#88ff5a', '#fcff42', '#ffa62d', '#ff36ff']
+          particleCount: 25,
+          angle: 20,
+          spread: 45,
+          origin: { x: 0.6, y: 0.75 }, // Más abajo, a la altura de la pregunta
+          colors: ['#26ccff', '#a25afd', '#ff5e7e', '#88ff5a', '#fcff42']
         });
 
         if (Date.now() < animationEnd) {
@@ -47,5 +45,5 @@ export default function Confetti({ trigger, onComplete }: ConfettiProps) {
     }
   }, [trigger, onComplete]);
 
-  return null; // Este componente no renderiza nada visible
+  return null;
 }
