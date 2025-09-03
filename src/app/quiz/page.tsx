@@ -7,6 +7,7 @@ import { calculateScore } from '@/lib/scoring';
 import QuizCard from '@/components/QuizCard';
 import ProgressBar from '@/components/ProgressBar';
 import Confetti from '@/components/Confetti';
+import ThemeToggle from '@/components/ThemeToggle';
 import { Home, X } from 'lucide-react';
 
 export default function QuizPage() {
@@ -20,9 +21,16 @@ export default function QuizPage() {
   const [shake, setShake] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [playerName, setPlayerName] = useState('');
+  const [isDark, setIsDark] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
+  // Cargar tema
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    setIsDark(savedTheme === 'dark');
+  }, []);
 
   // Función nextQuestion definida con useCallback
   const nextQuestion = useCallback(() => {
@@ -117,23 +125,40 @@ export default function QuizPage() {
 
   if (!playerName) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
+        isDark ? 'bg-gradient-to-br from-gray-900 to-slate-900' : 'bg-gradient-to-br from-blue-50 to-indigo-100'
+      }`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando...</p>
+          <p className={`mt-4 transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+            Cargando...
+          </p>
         </div>
       </div>
     );
   }
 
+  const bgClass = isDark 
+    ? 'min-h-screen bg-gradient-to-br from-gray-900 to-slate-900 p-4 transition-colors duration-300'
+    : 'min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 transition-colors duration-300';
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className={bgClass}>
       <div className="container mx-auto py-8">
+        {/* Toggle de tema en esquina superior derecha */}
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
+          <h1 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
+            isDark ? 'text-white' : 'text-gray-800'
+          }`}>
             AWS Cloud Practitioner Quiz
           </h1>
-          <p className="text-gray-600">
+          <p className={`transition-colors duration-300 ${
+            isDark ? 'text-gray-300' : 'text-gray-600'
+          }`}>
             ¡Hola {playerName}! Responde las preguntas lo más rápido posible
           </p>
         </div>
@@ -142,7 +167,11 @@ export default function QuizPage() {
         <div className="flex justify-between items-center max-w-2xl mx-auto mb-6">
           <button
             onClick={handleGoHome}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200 font-medium"
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-200 font-medium ${
+              isDark 
+                ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' 
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            }`}
           >
             <Home className="w-4 h-4" />
             Volver al inicio
@@ -150,7 +179,11 @@ export default function QuizPage() {
           
           <button
             onClick={handleFinishQuiz}
-            className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors duration-200 font-medium"
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-200 font-medium ${
+              isDark
+                ? 'bg-red-900 hover:bg-red-800 text-red-300'
+                : 'bg-red-100 hover:bg-red-200 text-red-700'
+            }`}
           >
             <X className="w-4 h-4" />
             Finalizar
